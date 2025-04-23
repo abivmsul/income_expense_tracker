@@ -1,6 +1,6 @@
 {
-  "name": "Income Expense Tracker",
-  "short_name": "Finance Tracker",
+  "name": "የባባ ገቢ ወጪ",
+  "short_name": "የባባ ገቢ ወጪ",
   "description": "Track your income and expenses",
   "start_url": "/",
   "display": "standalone",
