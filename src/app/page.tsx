@@ -128,7 +128,7 @@ export default function Home() {
     <div className="space-y-8">
       {/* Header & actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-        <h1 className="text-3xl font-bold">የ ባባ ገቢ እና ወጪ ዝርዝር ማህደር</h1>
+        <h1 className="text-3xl font-bold">የ ባባ ገቢ እና ወጪ ማህደር</h1>
         <div className="mt-4 sm:mt-0 flex space-x-2">
           <TransactionForm />
           <Button

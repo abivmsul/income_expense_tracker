@@ -12,22 +12,16 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Calendar } from '@/components/ui/calendar'
-import { CalendarIcon, PlusIcon, WalletCards, Coins, Type, ListFilter } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { WalletCards, Coins, Type, ListFilter, CalendarIcon, PlusIcon } from 'lucide-react'
 import { CategoryForm } from './CategoryForm'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+
+// Import react-datepicker
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 export default function TransactionForm() {
   const router = useRouter()
@@ -59,7 +53,7 @@ export default function TransactionForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    
+
     toast.promise(
       (async () => {
         const res = await fetch('/api/transactions', {
@@ -73,16 +67,15 @@ export default function TransactionForm() {
         })
 
         if (!res.ok) throw new Error('Failed to create transaction')
-        
+
         setOpen(false)
-        // router.refresh()
         window.location.reload()
       })(),
       {
         loading: 'Creating transaction...',
         success: 'Transaction created successfully!',
         error: (error) => error.message || 'Failed to create transaction',
-        finally: () => setLoading(false)
+        finally: () => setLoading(false),
       }
     )
   }
@@ -92,7 +85,7 @@ export default function TransactionForm() {
       <DialogTrigger asChild>
         <Button className="gap-2">
           <PlusIcon className="h-4 w-4" />
-          <span className=" sm:inline">አዲስ ዝርዝር</span>
+          <span className="sm:inline">አዲስ አስገባ</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md lg:max-w-lg">
@@ -110,7 +103,7 @@ export default function TransactionForm() {
               <div className="space-y-2">
                 <Label htmlFor="amount" className="flex items-center gap-2">
                   <Coins className="h-4 w-4 text-muted-foreground" />
-                  የብር መጠን 
+                  የብር መጠን
                 </Label>
                 <Input
                   id="amount"
@@ -126,29 +119,15 @@ export default function TransactionForm() {
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                   <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                  ቀን 
+                  ቀን
                 </Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full justify-start text-left font-normal',
-                        !formData.date && 'text-muted-foreground'
-                      )}
-                    >
-                      {formData.date ? format(formData.date, 'PPP') : 'Pick a date'}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={formData.date}
-                      onSelect={(date) => date && setFormData(f => ({ ...f, date }))}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <DatePicker
+                  selected={formData.date}
+                  onChange={(date) => date && setFormData(f => ({ ...f, date }))}
+                  dateFormat="yyyy/MM/dd"
+                  className="w-full py-2 px-3 border rounded"
+                  placeholderText="Select date"
+                />
               </div>
             </div>
 
@@ -156,13 +135,13 @@ export default function TransactionForm() {
             <div className="space-y-2">
               <Label htmlFor="description" className="flex items-center gap-2">
                 <Type className="h-4 w-4 text-muted-foreground" />
-                ዝርዝር ምክንያት 
+                ዝርዝር ምክንያት
               </Label>
               <Input
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData(f => ({ ...f, description: e.target.value }))}
-                placeholder="Enter transaction details..."
+                placeholder=" ዝርዝር ምክንያት እዚ አስገባ ..."
                 required
               />
             </div>
@@ -172,7 +151,7 @@ export default function TransactionForm() {
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                   <ListFilter className="h-4 w-4 text-muted-foreground" />
-                  ዝርዝር አይነት 
+                  አይነት
                 </Label>
                 <Select
                   value={formData.type}
@@ -183,10 +162,10 @@ export default function TransactionForm() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="income" className="flex items-center gap-2">
-                      <span className="text-green-600">ገቢ </span>
+                      <span className="text-green-600">ገቢ</span>
                     </SelectItem>
                     <SelectItem value="expense" className="flex items-center gap-2">
-                      <span className="text-red-600">ወጪ </span>
+                      <span className="text-red-600">ወጪ</span>
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -196,7 +175,7 @@ export default function TransactionForm() {
                 <div className="flex justify-between items-center">
                   <Label className="flex items-center gap-2">
                     <ListFilter className="h-4 w-4 text-muted-foreground" />
-                    ምክንያት 
+                    ለምን ምክንያት
                   </Label>
                   <CategoryForm
                     onSuccess={(newCat) => {
@@ -211,7 +190,7 @@ export default function TransactionForm() {
                   onValueChange={(value) => setFormData(f => ({ ...f, categoryId: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder="ምክንያት ምረጥ" />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((cat) => (
@@ -234,7 +213,7 @@ export default function TransactionForm() {
                   እያስገባ ነው...
                 </div>
               ) : (
-                'አዲስ አስገባ'
+                'አስገባ'
               )}
             </Button>
           </form>
