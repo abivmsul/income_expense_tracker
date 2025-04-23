@@ -192,9 +192,9 @@ export default function Home() {
                   )}
                 >
                   {tx.type === 'income' ? (
-                    <PlusIcon className="w-4 h-4 mr-1" />
+                    <PlusIcon className="w-2 h-2 mr-1" />
                   ) : (
-                    <MinusIcon className="w-4 h-4 mr-1" />
+                    <MinusIcon className="w-2 h-2 mr-1" />
                   )}
                   {tx.amount.toLocaleString(undefined, {
                     minimumFractionDigits: 2,

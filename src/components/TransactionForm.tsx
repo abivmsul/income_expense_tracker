@@ -196,9 +196,7 @@ export default function TransactionForm() {
                     {categories.map((cat) => (
                       <SelectItem key={cat.id} value={cat.id}>
                         <span className="font-medium">{cat.name}</span>
-                        <span className="ml-2 text-xs text-muted-foreground">
-                          ({cat.type})
-                        </span>
+                        <span className="ml-2 text-xs text-muted-foreground">({cat.type === 'income' ? 'ገቢ' : 'ወጪ'})</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
