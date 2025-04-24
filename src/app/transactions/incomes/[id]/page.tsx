@@ -120,7 +120,10 @@ export default function IncomeDetailPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {formatCurrency(total)} ብር
+                  {(total.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }))} ብር
                 </div>
               </CardContent>
             </Card>
@@ -180,7 +183,10 @@ export default function IncomeDetailPage() {
                                 : 'text-red-600 dark:text-red-400'
                             )}>
                               {tx.type === 'income' && '+'}
-                              {formatCurrency(tx.amount)} ብር
+                              {(tx.amount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }))} ብር
                             </div>
                           </TableCell>
                         </TableRow>

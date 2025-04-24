@@ -183,7 +183,7 @@ export default function Home() {
                 className="cursor-pointer hover:bg-gray-100"
                 onClick={() => setSelectedTx(tx)}
               >
-                <TableCell>{format(new Date(tx.date), 'P')}</TableCell>
+                <TableCell>{format(new Date(tx.date), 'PP')}</TableCell>
                 <TableCell>{tx.category?.name ?? 'Uncategorized'}</TableCell>
                 <TableCell
                   className={cn(

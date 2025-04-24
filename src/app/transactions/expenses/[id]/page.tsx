@@ -125,7 +125,10 @@ export default function ExpenseDetailPage() {
               <CardHeader><CardTitle>አጠቃላይ ወጪ </CardTitle></CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
-                  {formatCurrency(total)} ብር
+                  {(total.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }))} ብር
                 </div>
               </CardContent>
             </Card>
@@ -193,7 +196,10 @@ export default function ExpenseDetailPage() {
                                 : 'text-red-600 dark:text-red-400'
                             )}>
                               {tx.type === 'expense' && '-'}
-                              {formatCurrency(tx.amount)} ብር
+                              {(tx.amount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }))} ብር
                             </div>
                           </TableCell>
                         </TableRow>

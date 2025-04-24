@@ -125,7 +125,10 @@ export default function IncomeCategoriesPage() {
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <span className="text-2xl font-bold text-green-600">
-                      {formatCurrency(cat.total)} ብር
+                      {(cat.total.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }))} ብር
                     </span>
                   </div>
                   {cat.lastDate && (

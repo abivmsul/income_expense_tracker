@@ -11,7 +11,7 @@ export async function GET(request: Request) {
       where: categoryId ? { categoryId } : undefined,
       include: { category: true },
       orderBy: { date: 'desc' },
-      take: 10,
+      // take: 10,
     })
 
     return NextResponse.json(transactions)
