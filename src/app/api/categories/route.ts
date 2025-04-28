@@ -6,7 +6,10 @@ export async function GET() {
     const categories = await prisma.category.findMany({
       include: {
         transactions: true
-      }
+      },
+      orderBy: {
+        id: 'desc', // or 'createdAt': 'desc' if you have a createdAt field
+      },
     });
     return NextResponse.json(categories);
   } catch (error) {
