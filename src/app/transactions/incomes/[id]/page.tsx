@@ -20,6 +20,8 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { cn, formatCurrency, formatDate } from '@/lib/utils';
 
 interface Transaction {
@@ -43,6 +45,8 @@ export default function IncomeDetailPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     async function load() {
@@ -65,8 +69,20 @@ export default function IncomeDetailPage() {
     if (id) load();
   }, [id]);
 
-  const total = transactions.reduce((sum, t) => sum + t.amount, 0);
-  const lastDate = transactions[0]?.date ?? null;
+  const filteredTransactions = transactions.filter((tx) => {
+    if (!startDate && !endDate) return true;
+    try {
+      const txDate = new Date(tx.date).toISOString().split('T')[0];
+      if (startDate && txDate < startDate) return false;
+      if (endDate && txDate > endDate) return false;
+      return true;
+    } catch (e) {
+      return true;
+    }
+  });
+
+  const total = filteredTransactions.reduce((sum, t) => sum + t.amount, 0);
+  const lastDate = filteredTransactions[0]?.date ?? null;
 
   if (error) {
     return (
@@ -107,10 +123,45 @@ export default function IncomeDetailPage() {
             <h1 className="text-3xl font-bold flex items-center gap-3">
               {category.name}
               <Badge variant="secondary" className="text-sm">
-                {transactions.length} ዝውውር
+                {filteredTransactions.length} ዝውውር
               </Badge>
             </h1>
           </div>
+
+          {/* Date Filter */}
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex flex-col md:flex-row gap-4 items-end">
+                <div className="space-y-2 w-full md:w-1/3">
+                  <Label htmlFor="startDate">ከ (Start Date)</Label>
+                  <Input
+                    id="startDate"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2 w-full md:w-1/3">
+                  <Label htmlFor="endDate">እስከ (End Date)</Label>
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                  />
+                </div>
+                <div className="w-full md:w-1/3">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => { setStartDate(''); setEndDate(''); }}
+                  >
+                    አጽዳ (Clear)
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -145,7 +196,7 @@ export default function IncomeDetailPage() {
               <CardTitle>የ ገቢ ዝውውር መረጃ ታሪክ</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              {transactions.length === 0 ? (
+              {filteredTransactions.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                    ምንም አይነት ገቢ ዝውውር የለም 
                 </div>
@@ -160,7 +211,7 @@ export default function IncomeDetailPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {transactions.map((tx) => (
+                      {filteredTransactions.map((tx) => (
                         <TableRow 
                           key={tx.id}
                           className="hover:bg-muted/50 transition-colors"
